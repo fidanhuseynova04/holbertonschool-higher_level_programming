@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import pickle
 """Module containing pickle module and CustomObject"""
 
 
