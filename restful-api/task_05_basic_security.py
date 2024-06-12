@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 auth = HTTPBasicAuth()
-app.config['JWT_SECRET_KEY'] = 'super-secret-key'  # Change this to a strong secret key
+app.config['SECRET_KEY'] = 'your_secret_key_here'
 jwt = JWTManager(app)
 
 users = {
@@ -22,6 +22,7 @@ def verify_password(username, password):
     user = users.get(username)
     if user and check_password_hash(user['password'], password):
         return user
+    return None
 
 
 @app.route('/basic-protected')
@@ -55,8 +56,8 @@ def jwt_protected():
 def admin_only():
     current_user = get_jwt_identity()
     if current_user['role'] == 'admin':
-        return "Admin Access: Granted"
-    return jsonify({"error": "Admin access required"}), 403
+        return jsonify({"error": "Admin access required"}), 403
+    return "Admin Access: Granted"
 
 
 @jwt.unauthorized_loader
