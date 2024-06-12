@@ -21,7 +21,11 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             response = {"status": "OK"}
             self.wfile.write(json.dumps(response).encode('utf-8'))
         else:
-            self.send_error(404, "Endpoint not found")
+            self.send_response(404)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            reponse = {"error": "Endpoint not found"}
+            self.wfile.write(json.dumps(response).encode('utf-8'))
     
     def log_message(self, format, *args):
         return
