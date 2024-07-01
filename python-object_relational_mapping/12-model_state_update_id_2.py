@@ -1,15 +1,16 @@
 #!/usr/bin/python3
+
 """
-This script connects to a MySQL database
+Script changes the name of a State object from the database hbtn_0e_6_usa
 """
+
 
 import sys
-from model_state import Base, State
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from model_state import Base, State
 
-
-def main():
+if __name__ == "__main__":
     usr = sys.argv[1]
     pwd = sys.argv[2]
     db_name = sys.argv[3]
@@ -18,15 +19,15 @@ def main():
                            .format(usr, pwd, db_name))
 
     Base.metadata.create_all(engine)
-
     Session = sessionmaker(bind=engine)
     session = Session()
+    state = session.query(State).filter(State.id == 2).first()
 
-    for state in session.query(State).filter(State.id == 2):
+    if state:
         state.name = "New Mexico"
-    session.commit()
+        session.commit()
+        print(f"State id {state.id} updated to 'New Mexico'")
+    else:
+        print("State with id 2 not found")
+
     session.close()
-
-
-if __name__ == "__main__":
-    main()
