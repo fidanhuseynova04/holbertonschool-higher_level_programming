@@ -1,15 +1,16 @@
 #!/usr/bin/python3
 """
-This script connects to a MySQL database
+Script that lists all State objects that contain
+the letter a from the database hbtn_0e_6_usa
 """
 
+
 import sys
-from model_state import Base, State
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from model_state import Base, State
 
-
-def main():
+if __name__ == "__main__":
     usr = sys.argv[1]
     pwd = sys.argv[2]
     db_name = sys.argv[3]
@@ -18,13 +19,10 @@ def main():
                            .format(usr, pwd, db_name))
 
     Base.metadata.create_all(engine)
-
     Session = sessionmaker(bind=engine)
     session = Session()
+    states = session.query(State).filter(State.name.like('%a%')).all()
 
-    for state in session.query(State).filter(State.name.like('%a%')).all():
-        print("{}: {}".format(state.id, state.name))
-
-
-if __name__ == "__main__":
-    main()
+    for state in states:
+        print(f"{state.id}: {state.name}")
+    session.close()
